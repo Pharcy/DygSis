@@ -1,0 +1,29 @@
+module ringoffive(gout, ctrl);
+  output [1:5] gout;
+  input ctrl;
+
+  // Internal nets for the five stages.
+  wire x1, x2, x3, x4, x5, temp;
+
+  // Stage 1: Inverter with 10 ns delay: x1 = NOT(x5)
+  not #10 inv1(x1, x5);
+  // Stage 2: x2 = NOT(x1)
+  not #10 inv2(x2, x1);
+  // Stage 3: x3 = NOT(x2)
+  not #10 inv3(x3, x2);
+  // Stage 4: x4 = NOT(x3)
+  not #10 inv4(x4, x3);
+  // Controlled stage: AND the output of stage 4 with ctrl,
+  // then invert. When ctrl=0, temp=0 and x5 becomes 1 (stable state).
+  and #10 and1(temp, x4, ctrl);
+  not #10 inv5(x5, temp);
+
+  // Output assignment.
+  assign gout[1] = x1;
+  assign gout[2] = x2;
+  assign gout[3] = x3;
+  assign gout[4] = x4;
+  assign gout[5] = x5;
+  
+endmodule
+

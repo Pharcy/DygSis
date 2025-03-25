@@ -1,0 +1,25 @@
+module tb_ringoffive;
+  reg ctrl;
+  wire [1:5] gout;
+
+  // Instantiate the ringoffive module.
+  ringoffive uut(.gout(gout), .ctrl(ctrl));
+
+  initial begin
+    // Hold control low for 50 ns to initialize the ring.
+    ctrl = 0;
+    #50;
+    // Release control to allow oscillation.
+    ctrl = 1;
+    // Run simulation long enough to view at least two periods (~100 ns per cycle).
+    #500;
+    $finish;
+  end
+
+  // Dump signals for viewing in GTKWave.
+  initial begin
+    $dumpfile("ringoffive.vcd");
+    $dumpvars(0, tb_ringoffive);
+  end
+endmodule
+
